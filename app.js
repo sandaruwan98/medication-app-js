@@ -14,6 +14,13 @@ const app = () => {
   outline.style.strokeDasharray = outlineLen
   outline.style.strokeDashoffset = outlineLen
 
+  // pick sound
+  sounds.forEach(option => {
+    option.addEventListener('click', function () {
+      video.src = this.getAttribute('data-video')
+      song.src = this.getAttribute('data-sound')
+    })
+  })
 
   //play sound
   play.addEventListener('click', () => {
@@ -44,7 +51,25 @@ const app = () => {
     }
   }
 
+  //animate cicle
+  song.ontimeupdate = () => {
+    let curTime = song.currentTime
+    let elapesed = fakeDuration - curTime
+    let secs = Math.floor(elapesed % 60)
+    let mins = Math.floor(elapesed / 60)
 
+    let progress = outlineLen - (curTime / fakeDuration) * outlineLen
+    outline.style.strokeDashoffset = progress
+
+    timeDisplay.textContent = `${mins}:${secs}`
+
+    if (curTime >= fakeDuration) {
+      song.pause()
+      song.currentTime = 0
+      play.src = './svg/play.svg'
+      video.pause()
+    }
+  }
 
 }
 
